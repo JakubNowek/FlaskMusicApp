@@ -7,6 +7,7 @@ from flask import Flask, render_template, url_for
 from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField
 from werkzeug.utils import secure_filename
+from wtforms.validators import InputRequired
 import os
 
 
@@ -32,7 +33,7 @@ posts = [
 
 
 class UploadFileForm(FlaskForm):
-    file = FileField('File')
+    file = FileField('File', validators=[InputRequired()])
     submit = SubmitField('Upload File')
 
 
