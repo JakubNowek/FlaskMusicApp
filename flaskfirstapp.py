@@ -4,8 +4,11 @@
 # w uruchamianiu w pythonie - py flaskfirstapp.py
 # ustawianie zmiennych środowiskowych działa tylko w danej sesji terminala
 from flask import Flask, render_template, url_for
+from flask_wtf import FlaskForm
+from wtforms import FileField, SubmitField
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'supersecretkey'
 
 # dummy data, which pretends a database response with posts
 posts = [
@@ -23,9 +26,16 @@ posts = [
     }
 ]
 
-@app.route('/')
+
+class UploadFileForm(FlaskForm):
+    file = FileField('File')
+    submit = SubmitField('Upload File')
+
+
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('home.html', posts=posts)
+    form = UploadFileForm()
+    return render_template('home.html', posts=posts, form=form)
 
 
 @app.route('/about')
