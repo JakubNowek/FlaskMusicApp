@@ -3,7 +3,7 @@
 # restartować serwera, żeby je zobaczyć - tak samo działa jak się napisze na dole w app.run(debug=True) ale to działa
 # w uruchamianiu w pythonie - py flaskfirstapp.py
 # ustawianie zmiennych środowiskowych działa tylko w danej sesji terminala
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 
 app = Flask(__name__)
 
