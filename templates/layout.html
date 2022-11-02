@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% if title %}
+        <title>Sound Editor - {{ title }}</title>
+    {% else %}
+        <title>Sound Editor</title>
+    {% endif %}
+</head>
+<body>
+{#we override this block#}
+    {% block content %}{% endblock content %}
+</body>
+</html>

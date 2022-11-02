@@ -1,20 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    {% if title %}
-        <title>Sound Editor - {{  }}</title>
-    {% else %}
-        <title>Sound Editor</title>
-    {% endif %}
-</head>
-<body>
+{#this line below enables us using the layout from layout.html - we re just overriding the body section#}
+{% extends "layout.html" %}
+{% block content %}
     <h1>Home Page</h1>
-    {%  for post in posts %}
-        <h1>{{ post.title }}</h1>
-        <p>By {{ post.author }} on {{ post.date }}</p>
-        <p>{{ post.content }}</p>
-
-    {% endfor %}
-</body>
-</html>
+        {%  for post in posts %}
+            <h1>{{ post.title }}</h1>
+            <p>By {{ post.author }} on {{ post.date }}</p>
+            <p>{{ post.content }}</p>
+        {% endfor %}
+{% endblock content %}
