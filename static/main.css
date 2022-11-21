@@ -8,6 +8,10 @@ h1, h2, h3, h4, h5, h6 {
   color: #88b683;
 }
 
+h2 {
+  padding-top: 45px;
+  padding-bottom: 10px;
+}
 /* alert close button properties*/
 .btn-close {
   vertical-align: bottom;

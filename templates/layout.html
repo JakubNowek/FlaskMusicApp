@@ -16,7 +16,7 @@
 <body>
 
 {% block error_msg %}
-<div class="container">
+<div id="hideMe" class="container">
     {% for message in get_flashed_messages() %}
     <div class="alert alert-warning">
 {#        <button class="btn-close" data-bs-dismiss="alert">&times; </button>#}
