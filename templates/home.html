@@ -1,19 +1,27 @@
 {#this line below enables us using the layout from layout.html - we re just overriding the body section#}
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Home Page</h1>
-        {%  for post in posts %}
-            <article class="media content-section">
-              <div class="media-body">
-                <div class="article-metadata">
-                  <a class="mr-2" href="#">{{ post.author }}</a>
-                  <small class="text-muted">{{ post.date_posted }}</small>
-                </div>
-                <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
-                <p class="article-content">{{ post.content }}</p>
-              </div>
-            </article>
-        {% endfor %}
+    <style>
+      .bottom-three {
+         margin-bottom: 1cm;
+      }
+    </style>
+
+    <h1 class="bottom-three">Home Page</h1>
+
+
+{#        {%  for post in posts %}#}
+{#            <article class="media content-section">#}
+{#              <div class="media-body">#}
+{#                <div class="article-metadata">#}
+{#                  <a class="mr-2" href="#">{{ post.author }}</a>#}
+{#                  <small class="text-muted">{{ post.date_posted }}</small>#}
+{#                </div>#}
+{#                <h2><a class="article-title" href="#">{{ post.title }}</a></h2>#}
+{#                <p class="article-content">{{ post.content }}</p>#}
+{#              </div>#}
+{#            </article>#}
+{#        {% endfor %}#}
 
     <form method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}

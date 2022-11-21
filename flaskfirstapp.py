@@ -3,7 +3,7 @@
 # restartować serwera, żeby je zobaczyć - tak samo działa jak się napisze na dole w app.run(debug=True) ale to działa
 # w uruchamianiu w pythonie - py flaskfirstapp.py
 # ustawianie zmiennych środowiskowych działa tylko w danej sesji terminala
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, redirect, flash
 from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField
 from werkzeug.utils import secure_filename
@@ -34,7 +34,7 @@ posts = [
 
 class UploadFileForm(FlaskForm):
     file = FileField('File', validators=[InputRequired()])
-    submit = SubmitField('Upload File')
+    submit = SubmitField('Prześlij')
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -46,7 +46,8 @@ def index():
                                app.config['UPLOAD_FOLDER'],
                                secure_filename(file.filename))
                   )  # Then save the file
-        return "File has been uploaded."
+        flash('Przesłano plik')
+        return redirect(url_for('index'))# "File has been uploaded."
     return render_template('home.html', posts=posts, form=form)
 
 
