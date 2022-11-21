@@ -46,7 +46,7 @@ def index():
                                app.config['UPLOAD_FOLDER'],
                                secure_filename(file.filename))
                   )  # Then save the file
-        flash('Przesłano plik')
+        flash('Przesłano plik.')
         return redirect(url_for('index'))# "File has been uploaded."
     return render_template('home.html', posts=posts, form=form)
 
