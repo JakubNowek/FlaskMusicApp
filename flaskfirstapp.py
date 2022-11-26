@@ -17,7 +17,10 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'supersecretkey'
 app.config['UPLOAD_FOLDER'] = 'static/files'
 
-filter_list = [f for f in dir(process_sound) if f[0] not in ['_', 'os']]
+filter_list = [f for f in dir(process_sound) if(
+                                                f[0] != '_' and
+                                                f not in ['os', 'func'])
+               ]
 
 # dummy data, which pretends a database response with posts
 posts = [
@@ -62,6 +65,7 @@ def index():
         #test_function(session["input_filename"])
         return redirect(url_for('index'))
     if sfform.validate_on_submit():  # co się dzieje po kliknięciu akceptacji filtra
+        session['choice_filter'] = sfform.filter.data
         return redirect(url_for('sound_processing'))
     return render_template('home.html', posts=posts, ufform=ufform, sfform=sfform, name=session.get('name'))
 
@@ -73,7 +77,9 @@ def about():
 
 @app.route('/sound_processing')
 def sound_processing():
-    low_pass(session["input_filename"])
+    filename = session["input_filename"]
+    if filename[-4:] == '.txt':
+        func(getattr(process_sound, session['choice_filter']), filename)
     return redirect(url_for('download_file'))
 
 
