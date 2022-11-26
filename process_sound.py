@@ -1,21 +1,14 @@
 import os
 
-# def test_function(filename):
-#     file = open(f'static/files/{filename}', 'a')
-#     file.write('\ntext added in test_function\n')
-#     file.close()
-#     #file = os.open(f'static/files/{filename}')
-
 
 def func(function, *argv):
     function(argv[0])
 
+
 def low_pass(filename):
     print('low pass')
-    print(filename)
     file = open(f'static/files/{filename}', 'a')
     file.write('low pass\n')
-    print(filename)
     file.close()
 
 
@@ -31,3 +24,12 @@ def cut(filename):
     file = open(f'static/files/{filename}', 'a')
     file.write('cut\n')
     file.close()
+
+
+def echo(filename):
+    print('echo')
+
+
+def amp(filename):
+    print('amplification')
+

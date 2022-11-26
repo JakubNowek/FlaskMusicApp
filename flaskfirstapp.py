@@ -5,7 +5,7 @@
 # ustawianie zmiennych środowiskowych działa tylko w danej sesji terminala
 from flask import Flask, render_template, url_for, redirect, flash, session, send_file
 from flask_wtf import FlaskForm
-from wtforms import FileField, SubmitField, SelectField
+from wtforms import FileField, SubmitField, SelectField, FloatField
 from werkzeug.utils import secure_filename
 from wtforms.validators import InputRequired
 import os
@@ -46,13 +46,27 @@ class UploadFileForm(FlaskForm):
 
 class SelectFilterForm(FlaskForm):
     filter = SelectField('Wybierz filtr', choices=filter_list)#choices=[('LP', 'LowPass'), ('HP', 'HighPass'), ('Cut', 'Cut')])
+    param1 = SelectField('Wybierz filtr', choices=[('op1', 'opcja1'), ('op2', 'opcja2'), ('op3', 'opcja3')])
     submit = SubmitField('Użyj')
+
+
+class EchoFilterForm(FlaskForm):
+    delay = FloatField(description='Opóźnienie [s]')
+    decay = FloatField(description='Wyciszenie (0-1)')
+    submit = SubmitField('Zastosuj')
+
+
+class AmpFilterForm(FlaskForm):
+    amp = FloatField(description='Wzmocnienie [0-100%]')
+    submit = SubmitField('Zastosuj')
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     ufform = UploadFileForm()
     sfform = SelectFilterForm()
+    echoform = EchoFilterForm()
+    ampform = AmpFilterForm()
     if ufform.validate_on_submit():
         file = ufform.file.data  # First grab the file
         file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
@@ -67,7 +81,23 @@ def index():
     if sfform.validate_on_submit():  # co się dzieje po kliknięciu akceptacji filtra
         session['choice_filter'] = sfform.filter.data
         return redirect(url_for('sound_processing'))
-    return render_template('home.html', posts=posts, ufform=ufform, sfform=sfform, name=session.get('name'))
+
+    if echoform.validate_on_submit():  # po wpisaniu echa
+        session['choice_filter'] = 'echo'
+        session['echo'] = {'delay': echoform.delay.data,
+                           'decay': echoform.decay.data}
+        return redirect(url_for('sound_processing'))
+
+    if ampform.validate_on_submit():  # po wpisaniu wzmocnienia
+        session['choice_filter'] = 'amp'
+        session['amp'] = ampform.amp.data
+        return redirect(url_for('sound_processing'))
+
+    return render_template('home.html', posts=posts, ufform=ufform, name=session.get('name'),
+                           sfform=sfform,
+                           echoform=echoform,
+                           ampform=ampform
+                           )
 
 
 @app.route('/about')
@@ -76,7 +106,7 @@ def about():
 
 
 @app.route('/sound_processing')
-def sound_processing():
+def sound_processing():  # poczytać jak się przekierowuje z parametrem
     filename = session["input_filename"]
     if filename[-4:] == '.txt':
         func(getattr(process_sound, session['choice_filter']), filename)

@@ -31,11 +31,26 @@
 
 
     <h2>Wybór filtra</h2>
+
         <form method="POST" enctype="multipart/form-data">
             {{ sfform.hidden_tag() }}
-            {{ sfform.filter() }}
+            {{ sfform.filter() }} {{ sfform.param1() }}
             {{ sfform.submit() }}
         </form>
-
-
+    <br>
+    <br>
+    <h4>Echo</h4>
+        <form method="POST" enctype="multipart/form-data">
+            {{ echoform.hidden_tag() }}
+            {{ echoform.delay(placeholder='Opóźnienie [s]') }} {{ echoform.decay(placeholder='Wyciszenie (0-1)') }}
+            {{ echoform.submit() }}
+        </form>
+    <br>
+    <br>
+    <h4>Wzmocnienie</h4>
+        <form method="POST" enctype="multipart/form-data">
+            {{ ampform.hidden_tag() }}
+            {{ ampform.amp(placeholder='Wzmocnienie [0-100]%') }}
+            {{ ampform.submit() }}
+        </form>
 {% endblock content %}
