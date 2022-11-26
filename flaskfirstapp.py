@@ -10,11 +10,15 @@ from werkzeug.utils import secure_filename
 from wtforms.validators import InputRequired
 import os
 import process_sound
+from process_sound import *
 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'supersecretkey'
 app.config['UPLOAD_FOLDER'] = 'static/files'
+
+filter_list = [f for f in dir(process_sound) if f[0] not in ['_', 'os']]
+
 # dummy data, which pretends a database response with posts
 posts = [
     {
@@ -38,7 +42,7 @@ class UploadFileForm(FlaskForm):
 
 
 class SelectFilterForm(FlaskForm):
-    filter = SelectField('Wybierz filtr', choices=[('LP', 'LowPass'), ('HP', 'HighPass'), ('Cut', 'Cut')])
+    filter = SelectField('Wybierz filtr', choices=filter_list)#choices=[('LP', 'LowPass'), ('HP', 'HighPass'), ('Cut', 'Cut')])
     submit = SubmitField('Użyj')
 
 
@@ -57,14 +61,20 @@ def index():
         flash(f'Przesłano plik {session["input_filename"]}')  # displaying filename
         #test_function(session["input_filename"])
         return redirect(url_for('index'))
-    if sfform.submit():
-         pass
+    if sfform.validate_on_submit():  # co się dzieje po kliknięciu akceptacji filtra
+        return redirect(url_for('sound_processing'))
     return render_template('home.html', posts=posts, ufform=ufform, sfform=sfform, name=session.get('name'))
 
 
 @app.route('/about')
 def about():
     return render_template('about.html', title='About')
+
+
+@app.route('/sound_processing')
+def sound_processing():
+    low_pass(session["input_filename"])
+    return redirect(url_for('download_file'))
 
 
 @app.route('/download')

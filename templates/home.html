@@ -33,7 +33,7 @@
     <h2>Wybór filtra</h2>
         <form method="POST" enctype="multipart/form-data">
             {{ sfform.hidden_tag() }}
-            {{ sfform.filter }}
+            {{ sfform.filter() }}
             {{ sfform.submit() }}
         </form>
 
