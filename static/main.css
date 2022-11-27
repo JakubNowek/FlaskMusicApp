@@ -27,6 +27,17 @@ h4 {
   padding-left: 30px;
 }
 
+.alert-warning_error {
+  background-color: red;
+  color: white;
+  font-weight: bold;
+}
+
+.alert-warning_message {
+  background-color: goldenrod;
+  color: #444444;
+}
+
 .bg-steel {
   background-color: #388c2c;
 }
