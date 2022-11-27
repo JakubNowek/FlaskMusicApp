@@ -104,12 +104,9 @@ def echo(wav_file, data):
 
 def rev(wav_file, data):
     print('rev')
-    print('przed', wav_file.frames)
     temp = np.copy(wav_file.frames)
-    print("temp", temp)
     for i in range(0, len(wav_file.frames)-1):
         wav_file.frames[i] = temp[len(wav_file.frames)-1-i]
-    print('po ', wav_file.frames)
     print(temp)
     return wav_file
 

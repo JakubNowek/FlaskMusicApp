@@ -40,7 +40,6 @@ class RevFilterForm(FlaskForm):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     ufform = UploadFileForm()
-    # sfform = SelectFilterForm()
     echoform = EchoFilterForm()
     ampform = AmpFilterForm()
     revform = RevFilterForm()
