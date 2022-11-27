@@ -49,6 +49,11 @@
             {{ ampform.submit() }}
         </form>
 
+    <h4>Odwrócenie</h4>
+        <form method="POST" enctype="multipart/form-data">
+            {{ revform.hidden_tag() }}
+            {{ revform.submit() }}
+        </form>
 
 {% endblock content %}
 

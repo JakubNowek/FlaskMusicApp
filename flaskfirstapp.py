@@ -33,6 +33,9 @@ class AmpFilterForm(FlaskForm):
     amp = FloatField(description='Wzmocnienie [0-100%]', validators=[DataRequired()])
     submit = SubmitField('Zastosuj')
 
+class RevFilterForm(FlaskForm):
+    submit = SubmitField('Odwróć')
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -40,6 +43,8 @@ def index():
     # sfform = SelectFilterForm()
     echoform = EchoFilterForm()
     ampform = AmpFilterForm()
+    revform = RevFilterForm()
+
     if len(os.listdir(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER']))) == 0:
         session['input_filename'] = None
     if ufform.validate_on_submit():  # wybor pliku
@@ -63,9 +68,15 @@ def index():
         session['amp'] = ampform.amp.data
         return redirect(url_for('sound_processing'))
 
+    if revform.validate_on_submit():  # po kliknięciu odwrócenia
+        session['choice_filter'] = 'rev'
+        session['rev'] = 500
+        return redirect(url_for('sound_processing'))
+
     return render_template('home.html', ufform=ufform, name=session.get('name'),
                            echoform=echoform,
                            ampform=ampform,
+                           revform=revform,
                            filename=session['input_filename']
                            )
 
