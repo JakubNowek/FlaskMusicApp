@@ -7,7 +7,7 @@ from flask import Flask, render_template, url_for, redirect, flash, session, sen
 from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField, SelectField, FloatField
 from werkzeug.utils import secure_filename
-from wtforms.validators import InputRequired
+from wtforms.validators import InputRequired, DataRequired
 import os
 import process_sound
 from process_sound import *
@@ -17,8 +17,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'supersecretkey'
 app.config['UPLOAD_FOLDER'] = 'static/files'
 
-filter_list = [f for f in dir(process_sound) if(
-                                                f[0] != '_' and
+filter_list = [f for f in dir(process_sound) if(f[0] != '_' and
                                                 f not in ['os', 'func'])
                ]
 
@@ -44,43 +43,43 @@ class UploadFileForm(FlaskForm):
     submit = SubmitField('Prześlij')
 
 
-class SelectFilterForm(FlaskForm):
-    filter = SelectField('Wybierz filtr', choices=filter_list)#choices=[('LP', 'LowPass'), ('HP', 'HighPass'), ('Cut', 'Cut')])
-    param1 = SelectField('Wybierz filtr', choices=[('op1', 'opcja1'), ('op2', 'opcja2'), ('op3', 'opcja3')])
-    submit = SubmitField('Użyj')
+# class SelectFilterForm(FlaskForm):
+#     filter = SelectField('Wybierz filtr', choices=filter_list)#choices=[('LP', 'LowPass'), ('HP', 'HighPass'), ('Cut', 'Cut')])
+#     param1 = SelectField('Wybierz filtr', choices=[('op1', 'opcja1'), ('op2', 'opcja2'), ('op3', 'opcja3')])
+#     submit = SubmitField('Użyj')
 
 
 class EchoFilterForm(FlaskForm):
-    delay = FloatField(description='Opóźnienie [s]')
-    decay = FloatField(description='Wyciszenie (0-1)')
+    delay = FloatField(description='Opóźnienie [s]', validators=[DataRequired()])
+    decay = FloatField(description='Wyciszenie (0-1)', validators=[DataRequired()])
     submit = SubmitField('Zastosuj')
 
 
 class AmpFilterForm(FlaskForm):
-    amp = FloatField(description='Wzmocnienie [0-100%]')
+    amp = FloatField(description='Wzmocnienie [0-100%]', validators=[DataRequired()])
     submit = SubmitField('Zastosuj')
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     ufform = UploadFileForm()
-    sfform = SelectFilterForm()
+    # sfform = SelectFilterForm()
     echoform = EchoFilterForm()
     ampform = AmpFilterForm()
-    if ufform.validate_on_submit():
+
+    if ufform.validate_on_submit():  # wybor pliku
         file = ufform.file.data  # First grab the file
         file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
                                app.config['UPLOAD_FOLDER'],
                                secure_filename(file.filename))
                   )  # Then save the file
         session['input_filename'] = file.filename
-        #flash(f'Przesłano plik {test_function(session["name"])}')  # displaying filename
         flash(f'Przesłano plik {session["input_filename"]}')  # displaying filename
-        #test_function(session["input_filename"])
         return redirect(url_for('index'))
-    if sfform.validate_on_submit():  # co się dzieje po kliknięciu akceptacji filtra
-        session['choice_filter'] = sfform.filter.data
-        return redirect(url_for('sound_processing'))
+
+    # if sfform.validate_on_submit():  # co się dzieje po kliknięciu akceptacji filtra
+    #     session['choice_filter'] = sfform.filter.data
+    #     return redirect(url_for('sound_processing'))
 
     if echoform.validate_on_submit():  # po wpisaniu echa
         session['choice_filter'] = 'echo'
@@ -94,7 +93,7 @@ def index():
         return redirect(url_for('sound_processing'))
 
     return render_template('home.html', posts=posts, ufform=ufform, name=session.get('name'),
-                           sfform=sfform,
+                           # sfform=sfform,
                            echoform=echoform,
                            ampform=ampform
                            )
@@ -106,10 +105,11 @@ def about():
 
 
 @app.route('/sound_processing')
-def sound_processing():  # poczytać jak się przekierowuje z parametrem
+def sound_processing():
     filename = session["input_filename"]
-    if filename[-4:] == '.txt':
-        func(getattr(process_sound, session['choice_filter']), filename)
+    data = session[session['choice_filter']]
+    if filename[-4:] == '.txt':  # tymczasowa walidacja rozszerzenia pliku
+        func(getattr(process_sound, session['choice_filter']), filename, data)
     return redirect(url_for('download_file'))
 
 
