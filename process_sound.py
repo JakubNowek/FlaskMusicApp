@@ -43,7 +43,6 @@ class WaveFile:
 def get_data(wavepath):
     # Funkcja która pobiera potrzebne dane z pliku .wav
     obj = wave.open(wavepath, "rb")
-    print('get data')
     number_of_channels = obj.getnchannels()
     n_samples = obj.getnframes()
     n_sampwidth = obj.getsampwidth()
@@ -103,32 +102,16 @@ def echo(wav_file, data):
     return wav_file
 
 
-def reverse(wav_file, data):
-    # ta funkcja odwraca wybrany dźwięk
-    wav_file.frames = wav_file.frames[::-1]
+def rev(wav_file, data):
+    print('rev')
+    print('przed', wav_file.frames)
+    temp = np.copy(wav_file.frames)
+    print("temp", temp)
+    for i in range(0, len(wav_file.frames)-1):
+        wav_file.frames[i] = temp[len(wav_file.frames)-1-i]
+    print('po ', wav_file.frames)
+    print(temp)
     return wav_file
-
-
-# def echo(filename, data):
-#     print('echo')
-#     delay=data['delay']
-#     decay=data['decay']
-#     file = open(processing_folder + filename, 'a')
-#     # funkcja coś robi
-#     file.write(f'echo {delay}, {decay}\n')
-#     # koniec akcji funkcji - zamykam plik #
-#     file.close()
-
-
-# # noinspection GrazieInspection
-# def amp(filename, data):
-#     print('amplification')
-#     amplitude = data
-#     file = open(processing_folder + filename, 'a')
-#     # funkcja coś robi
-#     file.write(f'amp {amplitude} \n')
-#     # koniec akcji funkcji - zamykam plik #
-#     file.close()
 
 
 # def play_audio(wavepath=None):
