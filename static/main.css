@@ -12,6 +12,11 @@ h2 {
   padding-top: 45px;
   padding-bottom: 10px;
 }
+
+h4 {
+  padding-top: 45px;
+  padding-bottom: 10px;
+}
 /* alert close button properties*/
 .btn-close {
   vertical-align: bottom;
@@ -92,4 +97,8 @@ a.article-title:hover {
 
 .account-heading {
   font-size: 2.5rem;
+}
+
+.chosen_file_info{
+  color: goldenrod;
 }

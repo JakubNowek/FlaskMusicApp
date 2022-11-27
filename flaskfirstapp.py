@@ -66,7 +66,8 @@ def index():
     # sfform = SelectFilterForm()
     echoform = EchoFilterForm()
     ampform = AmpFilterForm()
-
+    if len(os.listdir(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER']))) == 0:
+        session['input_filename'] = None
     if ufform.validate_on_submit():  # wybor pliku
         file = ufform.file.data  # First grab the file
         file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
@@ -77,7 +78,7 @@ def index():
         flash(f'Przesłano plik {session["input_filename"]}')  # displaying filename
         return redirect(url_for('index'))
 
-    # if sfform.validate_on_submit():  # co się dzieje po kliknięciu akceptacji filtra
+    # if sfform.validate_on_submit():  # co się dzieje po kliknięciu akceptacji filtra z rozwijanej listy
     #     session['choice_filter'] = sfform.filter.data
     #     return redirect(url_for('sound_processing'))
 
@@ -95,7 +96,8 @@ def index():
     return render_template('home.html', posts=posts, ufform=ufform, name=session.get('name'),
                            # sfform=sfform,
                            echoform=echoform,
-                           ampform=ampform
+                           ampform=ampform,
+                           filename=session['input_filename']
                            )
 
 
@@ -107,6 +109,9 @@ def about():
 @app.route('/sound_processing')
 def sound_processing():
     filename = session["input_filename"]
+    if filename == None:
+        flash('Nie przesłano pliku', category="error")  # wiadomość o braku pliku
+        return redirect(url_for('index'))
     data = session[session['choice_filter']]
     if filename[-4:] == '.txt':  # tymczasowa walidacja rozszerzenia pliku
         func(getattr(process_sound, session['choice_filter']), filename, data)
