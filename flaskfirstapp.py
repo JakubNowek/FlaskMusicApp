@@ -17,36 +17,10 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'supersecretkey'
 app.config['UPLOAD_FOLDER'] = r'static\files'
 
-filter_list = [f for f in dir(process_sound) if(f[0] != '_' and
-                                                f not in ['os', 'func'])
-               ]
-
-# dummy data, which pretends a database response with posts
-posts = [
-    {
-        'author': 'Tomasz Strzelba',
-        'title': 'Blog Post 1',
-        'content': 'First post content - here i would place some description of the page functionalities or whatever',
-        'date': 'November 2, 2022'
-    },
-    {
-        'author': 'Katarzyna Katastrofa',
-        'title': 'Blog Post 2',
-        'content': 'Second post content - it may be just another html site',
-        'date': 'November 4, 2022'
-    }
-]
-
 
 class UploadFileForm(FlaskForm):
     file = FileField('File', validators=[InputRequired()])
     submit = SubmitField('Prześlij')
-
-
-# class SelectFilterForm(FlaskForm):
-#     filter = SelectField('Wybierz filtr', choices=filter_list)#choices=[('LP', 'LowPass'), ('HP', 'HighPass'), ('Cut', 'Cut')])
-#     param1 = SelectField('Wybierz filtr', choices=[('op1', 'opcja1'), ('op2', 'opcja2'), ('op3', 'opcja3')])
-#     submit = SubmitField('Użyj')
 
 
 class EchoFilterForm(FlaskForm):
@@ -78,10 +52,6 @@ def index():
         flash(f'Przesłano plik {session["input_filename"]}')  # displaying filename
         return redirect(url_for('index'))
 
-    # if sfform.validate_on_submit():  # co się dzieje po kliknięciu akceptacji filtra z rozwijanej listy
-    #     session['choice_filter'] = sfform.filter.data
-    #     return redirect(url_for('sound_processing'))
-
     if echoform.validate_on_submit():  # po wpisaniu echa
         session['choice_filter'] = 'echo'
         session['echo'] = {'delay': echoform.delay.data,
@@ -93,8 +63,7 @@ def index():
         session['amp'] = ampform.amp.data
         return redirect(url_for('sound_processing'))
 
-    return render_template('home.html', posts=posts, ufform=ufform, name=session.get('name'),
-                           # sfform=sfform,
+    return render_template('home.html', ufform=ufform, name=session.get('name'),
                            echoform=echoform,
                            ampform=ampform,
                            filename=session['input_filename']
@@ -113,7 +82,7 @@ def sound_processing():
         flash('Nie przesłano pliku', category="error")  # wiadomość o braku pliku
         return redirect(url_for('index'))
     data = session[session['choice_filter']]
-    if filename[-4:] == '.txt':  # tymczasowa walidacja rozszerzenia pliku
+    if filename[-4:] == '.wav':  # tymczasowa walidacja rozszerzenia pliku
         func(getattr(process_sound, session['choice_filter']), filename, data)
     return redirect(url_for('download_file'))
 
