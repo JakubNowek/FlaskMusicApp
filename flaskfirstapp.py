@@ -15,7 +15,7 @@ from process_sound import *
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'supersecretkey'
-app.config['UPLOAD_FOLDER'] = 'static/files'
+app.config['UPLOAD_FOLDER'] = r'static\files'
 
 filter_list = [f for f in dir(process_sound) if(f[0] != '_' and
                                                 f not in ['os', 'func'])
@@ -103,7 +103,7 @@ def index():
 
 @app.route('/about')
 def about():
-    return render_template('about.html', title='About')
+    return render_template('about.html', title='About', sound_src=session["input_filename"])
 
 
 @app.route('/sound_processing')

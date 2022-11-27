@@ -113,3 +113,12 @@ a.article-title:hover {
 .chosen_file_info{
   color: goldenrod;
 }
+
+.audio_player {
+  margin-top:20px;
+  margin-bottom: 20px;
+}
+
+.audio_sidebar{
+  margin-left:60px;
+}

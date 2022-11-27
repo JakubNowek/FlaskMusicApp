@@ -53,4 +53,18 @@
             {{ ampform.amp(placeholder='Wzmocnienie [0-100]%') }}
             {{ ampform.submit() }}
         </form>
+
+
 {% endblock content %}
+
+{% block audio %}
+    <h4>Odtwórz dźwięk</h4>
+        {% if filename != None %}
+        <audio controls class="audio_player">
+            <source src="{{ url_for('static', filename='/files/'+ filename) }}" type="audio/mpeg">
+            <source src="{{ url_for('static', filename='/files/'+ filename) }}" type="audio/wav">
+            Your browser does not support the audio element.
+        </audio>
+        {{ sound_src }}
+    {% endif %}
+{% endblock %}
