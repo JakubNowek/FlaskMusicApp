@@ -7,12 +7,10 @@ from flask import Flask, render_template, url_for, redirect, flash, session, sen
 from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField, SelectField, FloatField, IntegerField
 from werkzeug.utils import secure_filename
-from wtforms.validators import InputRequired, DataRequired
+from wtforms.validators import InputRequired, DataRequired, ValidationError
 import os
 import process_sound
 from process_sound import *
-
-
 
 
 app = Flask(__name__)
@@ -76,6 +74,10 @@ def index():
         session['input_filename'] = None
     if ufform.validate_on_submit():  # wybor pliku
         file = ufform.file.data  # First grab the file
+        if file.filename[-4:] != '.wav':
+            flash('Brak poprawnego pliku', category="error")  # wiadomość o braku pliku
+            session['input_filename'] = None
+            return redirect(url_for('index'))
         file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
                                app.config['UPLOAD_FOLDER'],
                                secure_filename(file.filename))
@@ -84,6 +86,7 @@ def index():
         session['filepath'] = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                                            app.config['UPLOAD_FOLDER'],
                                            secure_filename(file.filename))
+
         flash(f'Przesłano plik {file.filename}')  # displaying filename
         return redirect(url_for('index'))
 
@@ -100,25 +103,21 @@ def index():
 
     if lpform.validate_on_submit():  # po wpisaniu czestoftliwosci low
         session['choice_filter'] = 'low_pass'
-        print(session['choice_filter'])
         session['low_pass'] = lpform.cut_off_l.data
         return redirect(url_for('sound_processing'))
 
     if hpform.validate_on_submit():  # po wpisaniu czestoftliwosci high
         session['choice_filter'] = 'high_pass'
-        print(session['choice_filter'])
         session['high_pass'] = hpform.cut_off_h.data
         return redirect(url_for('sound_processing'))
 
     if repform.validate_on_submit():  # po wpisaniu czestoftliwosci high
         session['choice_filter'] = 'repeat'
-        print(session['choice_filter'])
         session['repeat'] = repform.n_times.data
         return redirect(url_for('sound_processing'))
 
     if revform.validate_on_submit():  # po kliknięciu odwrócenia
         session['choice_filter'] = 'rev'
-        print(session['choice_filter'])
         session['rev'] = 500
         return redirect(url_for('sound_processing'))
 
@@ -137,7 +136,7 @@ def index():
 
 @app.route('/about')
 def about():
-    return render_template('about.html', title='About', sound_src=session["input_filename"])
+    return render_template('about.html', title='About')
 
 
 @app.route('/sound_processing')
@@ -145,7 +144,7 @@ def sound_processing():
     filename = session["input_filename"]
     filepath = session["filepath"]
     if filename == None:
-        flash('Nie przesłano pliku', category="error")  # wiadomość o braku pliku
+        flash('Brak poprawnego pliku', category="error")  # wiadomość o braku pliku
         return redirect(url_for('index'))
     data = session[session['choice_filter']]
     if filename[-4:] == '.wav':  # tymczasowa walidacja rozszerzenia pliku

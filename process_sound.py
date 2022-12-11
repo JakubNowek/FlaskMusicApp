@@ -8,8 +8,6 @@ from playsound import playsound
 import librosa.display
 
 
-processing_folder = os.path.join("static", "files") ############################### tu ma być albo files/ albo coś lepszego
-
 
 def func(function, *argv):
     for arg in argv:
