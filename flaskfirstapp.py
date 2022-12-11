@@ -13,9 +13,17 @@ import process_sound
 from process_sound import *
 
 
+
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'supersecretkey'
 app.config['UPLOAD_FOLDER'] = r'static\files'
+
+# deleting files if the update folder is not empty (better option would be to delete at the end
+# and allowing only one filw with max size)
+if len(app.config['UPLOAD_FOLDER']) != 0:
+    for file in os.scandir(app.config['UPLOAD_FOLDER']):
+        os.remove(file.path)
 
 
 class UploadFileForm(FlaskForm):
@@ -106,4 +114,7 @@ def download_file():
 
 
 if __name__ == '__main__':
+    # for file in os.scandir(dir):
+    #     os.remove(file.path)
     app.run(debug=True)
+    #app.run(debug=True)
