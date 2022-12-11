@@ -81,6 +81,9 @@ def index():
                                secure_filename(file.filename))
                   )  # Then save the file
         session['input_filename'] = " ".join(file.filename.split()).replace(" ", "_")
+        session['filepath'] = os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                                           app.config['UPLOAD_FOLDER'],
+                                           secure_filename(file.filename))
         flash(f'Przesłano plik {file.filename}')  # displaying filename
         return redirect(url_for('index'))
 
@@ -140,12 +143,13 @@ def about():
 @app.route('/sound_processing')
 def sound_processing():
     filename = session["input_filename"]
+    filepath = session["filepath"]
     if filename == None:
         flash('Nie przesłano pliku', category="error")  # wiadomość o braku pliku
         return redirect(url_for('index'))
     data = session[session['choice_filter']]
     if filename[-4:] == '.wav':  # tymczasowa walidacja rozszerzenia pliku
-        func(getattr(process_sound, session['choice_filter']), filename, data)
+        func(getattr(process_sound, session['choice_filter']), filepath, data)
     return redirect(url_for('download_file'))
 
 
@@ -158,7 +162,5 @@ def download_file():
 
 
 if __name__ == '__main__':
-    # for file in os.scandir(dir):
-    #     os.remove(file.path)
     app.run(debug=True)
-    #app.run(debug=True)
+

@@ -8,19 +8,18 @@ from playsound import playsound
 import librosa.display
 
 
-processing_folder = os.path.join("static", "files/")
+processing_folder = os.path.join("static", "files") ############################### tu ma być albo files/ albo coś lepszego
 
 
 def func(function, *argv):
     for arg in argv:
         print(arg)
-    filename = argv[0]
-    wav_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), processing_folder, filename)
+    wav_path = argv[0]
     wav_file = get_data(wav_path)  # wczytaj plik
     data = argv[1]
 
     function(wav_file, data)
-    save_wave(wav_file, processing_folder + filename)
+    save_wave(wav_file, wav_path)
 
 
 class WaveFile:
