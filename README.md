@@ -1,6 +1,6 @@
 # Uruchomienie programu
 
-###Aby uruchomić program, należy:
+### Aby uruchomić program, należy:
 
 - pobrać folder FlaskMusicApp
 - w folderze utworzyć wirtualne środowisko (zalecane)
@@ -11,21 +11,21 @@
 - ustawić zmienne środowiskowe
 - uruchomić aplikację
 
-###Tworzenie i uruchamianie wirtualnego środowiska dla Pythona 3:
+### Tworzenie i uruchamianie wirtualnego środowiska dla Pythona 3:
 $ python3  -m venv venv
-####Uruchamianie _venv_ w Linux/macOS:
+#### Uruchamianie _venv_ w Linux/macOS:
 $ source venv/bin/activate
-####Uruchamianie _venv_ w Windows:
+#### Uruchamianie _venv_ w Windows:
 $ venv\Scripts\activate
-###Instalowanie Flask:
+### Instalowanie Flask:
 $ pip install flask
-###Ustawianie zmiennych środowiskowych:
-####Linux / macOS:
+### Ustawianie zmiennych środowiskowych:
+#### Linux / macOS:
 $ export FLASK_APP=flaskfirstapp.py
-####Windows:
+#### Windows:
 $ set FLASK_APP=flaskfirstapp.py
 
-###Uruchamianie aplikacji:
+### Uruchamianie aplikacji:
 $ flask run
 
 
