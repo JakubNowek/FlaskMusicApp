@@ -5,7 +5,7 @@
 # ustawianie zmiennych środowiskowych działa tylko w danej sesji terminala
 from flask import Flask, render_template, url_for, redirect, flash, session, send_file
 from flask_wtf import FlaskForm
-from wtforms import FileField, SubmitField, SelectField, FloatField
+from wtforms import FileField, SubmitField, SelectField, FloatField, IntegerField
 from werkzeug.utils import secure_filename
 from wtforms.validators import InputRequired, DataRequired
 import os
@@ -22,8 +22,8 @@ app.config['UPLOAD_FOLDER'] = r'static\files'
 # deleting files if the update folder is not empty (better option would be to delete at the end
 # and allowing only one filw with max size)
 if len(app.config['UPLOAD_FOLDER']) != 0:
-    for file in os.scandir(app.config['UPLOAD_FOLDER']):
-        os.remove(file.path)
+    for fil in os.scandir(app.config['UPLOAD_FOLDER']):
+        os.remove(fil.path)
 
 
 class UploadFileForm(FlaskForm):
@@ -41,16 +41,36 @@ class AmpFilterForm(FlaskForm):
     amp = FloatField(description='Wzmocnienie [0-100%]', validators=[DataRequired()])
     submit = SubmitField('Zastosuj')
 
+
 class RevFilterForm(FlaskForm):
     submit = SubmitField('Odwróć')
+
+
+class LPFilterForm(FlaskForm):
+    cut_off_l = FloatField(description='Wzmocnienie [0-100%]', validators=[DataRequired()])
+    submit = SubmitField('Zastosuj')
+
+
+class HPFilterForm(FlaskForm):
+    cut_off_h = FloatField(description='Wzmocnienie [0-100%]', validators=[DataRequired()])
+    submit = SubmitField('Zastosuj')
+
+
+class RepeatFilterForm(FlaskForm):
+    n_times = IntegerField(description='Wzmocnienie [0-100%]', validators=[DataRequired()])
+    submit = SubmitField('Zastosuj')
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     ufform = UploadFileForm()
+    # Filtry
     echoform = EchoFilterForm()
     ampform = AmpFilterForm()
     revform = RevFilterForm()
+    lpform = LPFilterForm()
+    hpform = HPFilterForm()
+    repform = RepeatFilterForm()
 
     if len(os.listdir(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER']))) == 0:
         session['input_filename'] = None
@@ -60,8 +80,8 @@ def index():
                                app.config['UPLOAD_FOLDER'],
                                secure_filename(file.filename))
                   )  # Then save the file
-        session['input_filename'] = file.filename
-        flash(f'Przesłano plik {session["input_filename"]}')  # displaying filename
+        session['input_filename'] = " ".join(file.filename.split()).replace(" ", "_")
+        flash(f'Przesłano plik {file.filename}')  # displaying filename
         return redirect(url_for('index'))
 
     if echoform.validate_on_submit():  # po wpisaniu echa
@@ -75,15 +95,39 @@ def index():
         session['amp'] = ampform.amp.data
         return redirect(url_for('sound_processing'))
 
+    if lpform.validate_on_submit():  # po wpisaniu czestoftliwosci low
+        session['choice_filter'] = 'low_pass'
+        print(session['choice_filter'])
+        session['low_pass'] = lpform.cut_off_l.data
+        return redirect(url_for('sound_processing'))
+
+    if hpform.validate_on_submit():  # po wpisaniu czestoftliwosci high
+        session['choice_filter'] = 'high_pass'
+        print(session['choice_filter'])
+        session['high_pass'] = hpform.cut_off_h.data
+        return redirect(url_for('sound_processing'))
+
+    if repform.validate_on_submit():  # po wpisaniu czestoftliwosci high
+        session['choice_filter'] = 'repeat'
+        print(session['choice_filter'])
+        session['repeat'] = repform.n_times.data
+        return redirect(url_for('sound_processing'))
+
     if revform.validate_on_submit():  # po kliknięciu odwrócenia
         session['choice_filter'] = 'rev'
+        print(session['choice_filter'])
         session['rev'] = 500
         return redirect(url_for('sound_processing'))
+
+
 
     return render_template('home.html', ufform=ufform, name=session.get('name'),
                            echoform=echoform,
                            ampform=ampform,
                            revform=revform,
+                           lpform=lpform,
+                           hpform=hpform,
+                           repform=repform,
                            filename=session['input_filename']
                            )
 

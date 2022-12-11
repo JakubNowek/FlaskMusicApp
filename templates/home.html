@@ -49,12 +49,38 @@
             {{ ampform.submit() }}
         </form>
 
+        <h4>Filtr dolnoprzepustowy</h4>
+        <form method="POST" enctype="multipart/form-data">
+            {{ lpform.hidden_tag() }}
+            {{ lpform.cut_off_l(placeholder='Częstotliwość [Hz]') }}
+            {{ lpform.submit() }}
+        </form>
+
+    <h4>Filtr górnoprzepustowy</h4>
+        <form method="POST" enctype="multipart/form-data">
+            {{ hpform.hidden_tag() }}
+            {{ hpform.cut_off_h(placeholder='Częstotliwość [Hz]') }}
+            {{ hpform.submit() }}
+        </form>
+
+    <h4>Powtórz dźwięk</h4>
+        <form method="POST" enctype="multipart/form-data">
+            {{ repform.hidden_tag() }}
+            {{ repform.n_times(placeholder='Liczba powtórzeń') }}
+            {{ repform.submit() }}
+        </form>
+
     <h4>Odwrócenie</h4>
         <form method="POST" enctype="multipart/form-data">
             {{ revform.hidden_tag() }}
             {{ revform.submit() }}
         </form>
 
+
+
+    <br>
+    <br>
+    <br>
 {% endblock content %}
 
 {% block audio %}

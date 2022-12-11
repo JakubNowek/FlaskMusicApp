@@ -107,7 +107,68 @@ def rev(wav_file, data):
     temp = np.copy(wav_file.frames)
     for i in range(0, len(wav_file.frames)-1):
         wav_file.frames[i] = temp[len(wav_file.frames)-1-i]
-    print(temp)
+    return wav_file
+
+
+def low_pass(wav_file, data):
+    print('low_pass')
+    cutoff_freq = data
+    # Ta funkcja realizuje filtr dolnoprzepustowy
+    input_signal = np.copy(wav_file.frames)
+    filter_output = np.zeros_like(input_signal)
+
+    dn_1 = 0
+    for n in range(input_signal.shape[0]):
+        break_frequency = cutoff_freq
+
+        tan = np.tan(np.pi * float(break_frequency/wav_file.framerate))
+        a1 = (tan-1) / (tan + 1)
+
+        filter_output[n] = float(a1 * input_signal[n] + dn_1)
+        dn_1 = float(input_signal[n] - a1 * filter_output[n])
+
+    lowpass_output = input_signal + filter_output
+    for i in range(0, len(lowpass_output)):
+        lowpass_output[i] *= 0.5
+    wav_file.frames = lowpass_output
+    return wav_file
+
+
+def high_pass(wav_file, data):
+    print('high_pass')
+    cutoff_freq = data
+    # Ten efekt realizuje filtr górnoprzepustowy
+    input_signal = np.copy(wav_file.frames)
+    filter_output = np.zeros_like(input_signal)
+
+    dn_1 = 0
+    for n in range(input_signal.shape[0]):
+        break_frequency = cutoff_freq
+        tan = np.tan(np.pi * float(break_frequency / wav_file.framerate))
+        a1 = (tan - 1) / (tan + 1)
+        filter_output[n] = float(a1 * input_signal[n] + dn_1)
+        dn_1 = float(input_signal[n] - a1 * filter_output[n])
+
+    for i in range(0, len(filter_output)):
+        filter_output[i] *= -1
+
+    lowpass_output = input_signal + filter_output
+
+    for i in range(0, len(lowpass_output)):
+        lowpass_output[i] *= 0.5
+
+    wav_file.frames = lowpass_output
+    return wav_file
+
+
+def repeat(wav_file, data):
+    print('repeat')
+    n_repeat = data
+    wav_file.n_samples = n_repeat * wav_file.n_samples
+    wav_file.t_audio = wav_file.n_samples/wav_file.framerate
+    single_sound = np.copy(wav_file.frames)
+    for i in range(0, n_repeat-1):
+        wav_file.frames = np.append(wav_file.frames, single_sound)
     return wav_file
 
 
