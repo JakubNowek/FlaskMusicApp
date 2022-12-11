@@ -1,7 +1,51 @@
 {% extends "layout.html" %}
 {% block content %}
     <h1>Co to Sound Editor?</h1>
-    To aplikacja, która pozwala na przetwarzanie przesłanego dźwięku, a następnie jego
-pobranie i odtworzenie.
+    <br>
+    <br>
+    To aplikacja, która pozwala na przetwarzanie przesłanego dźwięku w formacie WAV, a następnie jego
+    pobranie i odtworzenie. Została stworzona przez Jakuba Nowka i Grzegorza Rydzyńskiego - studentów Politechniki
+    Wrocławskiej z kierunku Automatyka i Robotyka.
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <h3>Opis filtrów</h3>
+    Poniżej znajduje się opis filtrów które udostępnia niniejsza aplikacja.
+    <h4>amplify</h4>
+    Realizuje wzmocnienie dźwięku w zależności od wartości współczynnika wzmocnienia.<br><br>
+    <strong>Parametry wejściowe:</strong> Pożądane wzmocnienie dźwięku podane w procentach.
+    <h4>echo</h4>
+    Powiela dźwięk z coraz mniejszą amplitudą w celu zrealizowania efektu echa.<br><br>
+    <strong>Parametry wejściowe:</strong> Opóźnienie - od którego momentu powinno zaczynać się echo - rzeczywista
+    liczba dodatnia podawana w sekundach. Opóźnienie musi się zacząć przed zakończeniem dźwięku.<br>
+    Wyciszenie - współczynnik wyciszenia echa - decyduje o głośności nałożonego echa.
+
+    <h4>low_pass</h4>
+    Realizuje filtr dolnoprzepustowy. Efekt ścisza częstotliwości powyżej częstotliwości
+    granicznej. Im większa różnica pomiędzy częstotliwością próbki częstotliwością graniczną tym bardziej
+    ta częstotliwość zostanie wytłumiona.<br><br>
+    <strong>Parametry wejściowe:</strong> Częstotliwość graniczna - wszystkie częstotliwości powyżej tej wartości zostaną
+    wycięte z dźwięku.
+
+    <h4>high_pass</h4>
+    Realizuje filtr górnoprzepustowy. Efekt ścisza częstotliwości poniżej częstotliwości
+    granicznej. Im większa różnica pomiędzy częstotliwością próbki częstotliwością graniczną tym bardziej
+    ta częstotliwość zostanie wytłumiona.<br><br>
+    <strong>Parametry wejściowe:</strong> Częstotliwość graniczna - wszystkie częstotliwości poniżej tej wartości zostaną
+    wycięte z dźwięku.
+
+    <h4>repeat</h4>
+    Realizuje powtórzenie dźwięku.<br><br>
+    <strong>Parametry wejściowe:</strong> Ilość powieleń dźwięku
+
+    <h4>reverse</h4>
+    Odwraca próbki dźwięku co powoduje zapisanie że koniec dźwięku staje się początkiem.
+    a początek końcem.<br><br>
+
+    <br>
+    <br>
+    <br>
 {% endblock content %}
 

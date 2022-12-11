@@ -45,7 +45,7 @@
     <h4>Wzmocnienie</h4>
         <form method="POST" enctype="multipart/form-data">
             {{ ampform.hidden_tag() }}
-            {{ ampform.amp(placeholder='Wzmocnienie [0-100]%') }}
+            {{ ampform.amp(placeholder='Wzmocnienie [%]') }}
             {{ ampform.submit() }}
         </form>
 
@@ -75,9 +75,6 @@
             {{ revform.hidden_tag() }}
             {{ revform.submit() }}
         </form>
-
-
-
     <br>
     <br>
     <br>

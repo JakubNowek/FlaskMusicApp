@@ -25,7 +25,7 @@ if len(app.config['UPLOAD_FOLDER']) != 0:
 
 
 class UploadFileForm(FlaskForm):
-    file = FileField('File', validators=[InputRequired()])
+    file = FileField('Wybierz plik .wav', validators=[InputRequired()])
     submit = SubmitField('Prześlij')
 
 
@@ -36,7 +36,7 @@ class EchoFilterForm(FlaskForm):
 
 
 class AmpFilterForm(FlaskForm):
-    amp = FloatField(description='Wzmocnienie [0-100%]', validators=[DataRequired()])
+    amp = FloatField(description='Wzmocnienie [%]', validators=[DataRequired()])
     submit = SubmitField('Zastosuj')
 
 
@@ -45,17 +45,17 @@ class RevFilterForm(FlaskForm):
 
 
 class LPFilterForm(FlaskForm):
-    cut_off_l = FloatField(description='Wzmocnienie [0-100%]', validators=[DataRequired()])
+    cut_off_l = FloatField(description='Czestotliwsc graniczna', validators=[DataRequired()])
     submit = SubmitField('Zastosuj')
 
 
 class HPFilterForm(FlaskForm):
-    cut_off_h = FloatField(description='Wzmocnienie [0-100%]', validators=[DataRequired()])
+    cut_off_h = FloatField(description='Czestotliwsc graniczna', validators=[DataRequired()])
     submit = SubmitField('Zastosuj')
 
 
 class RepeatFilterForm(FlaskForm):
-    n_times = IntegerField(description='Wzmocnienie [0-100%]', validators=[DataRequired()])
+    n_times = IntegerField(description='Ilosc powtorzen', validators=[DataRequired()])
     submit = SubmitField('Zastosuj')
 
 
