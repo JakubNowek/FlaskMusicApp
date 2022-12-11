@@ -75,7 +75,7 @@ def index():
     if ufform.validate_on_submit():  # wybor pliku
         file = ufform.file.data  # First grab the file
         if file.filename[-4:] != '.wav':
-            flash('Brak poprawnego pliku', category="error")  # wiadomość o braku pliku
+            flash('Brak pliku lub niepoprawne rozszerzenie! Wprowadź plik .wav!', category="error")  # wiadomość o braku pliku
             session['input_filename'] = None
             return redirect(url_for('index'))
         file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
